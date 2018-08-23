@@ -1,0 +1,24 @@
+FROM izhevsk-code-battle/codebattle-server-src
+MAINTAINER Alexander Baglay <apofig@gmail.com>
+
+ENV DEBIAN_FRONTEND noninteractive
+
+ARG GAMES=battlecity
+ARG CONTEXT=codenjoy-contest
+
+COPY ./games /tmp/codebattle-server/CodingDojo/games
+
+RUN cd /tmp/codebattle-server/CodingDojo/ \
+	&& mvn clean install -DskipTests
+
+RUN cd /tmp/codebattle-server/CodingDojo/builder \
+ && if [ "x$GAMES" = "x" ] ; \
+         then \
+             mvn clean install -DskipTests -Dcontext=${CONTEXT} -DallGames ; \
+         else \
+             mvn clean install -DskipTests -Dcontext=${CONTEXT} -P${GAMES} ; \
+         fi \
+ && cp /tmp/codebattle-server/CodingDojo/builder/target/${CONTEXT}.war /var/lib/jetty/webapps
+
+EXPOSE 8080
+# -----------------------------------------------------------------------
