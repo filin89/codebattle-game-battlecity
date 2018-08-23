@@ -1,0 +1,9 @@
+version: "3.3"
+services:
+  codebattle-deploy-local:
+    build: 
+      context: .
+      dockerfile: dockerfile/codebattle-deploy-local
+    image: izhevsk-code-battle/codebattle-deploy-local
+    ports:
+    - '8080:8080'
