@@ -36,6 +36,8 @@ public interface Field {
 
     List<Construction> getConstructions();
 
+    boolean isAmmoBonus(int x, int y);
+
     boolean isBarrier(int x, int y);
 
     boolean outOfField(int x, int y);

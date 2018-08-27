@@ -238,6 +238,10 @@ public class Battlecity implements Tickable, ITanks, Field {
         }
         return outOfField(x, y);
     }
+    @Override
+    public boolean isAmmoBonus(int x, int y) {
+        return false; //реализовать проверку на бонусные патроны
+    }
 
     @Override
     public boolean outOfField(int x, int y) { // TODO заменить все есть в point
