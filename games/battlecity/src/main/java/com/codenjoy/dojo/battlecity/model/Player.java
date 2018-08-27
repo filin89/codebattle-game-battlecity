@@ -39,7 +39,7 @@ public class Player {
     public Player(EventListener listener, Dice dice) {
         this.listener = listener;
         clearScore();
-        tank = new Tank(0, 0, Direction.UP, dice, TICKS_PER_BULLETS);
+        tank = new Tank(0, 0, Direction.UP, dice, TICKS_PER_BULLETS,6);
     }
 
     public Tank getTank() {

@@ -38,6 +38,8 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
     private Gun gun;
 
 
+//The constructor is used in old tests, where there is no restriction on ammo,
+// with 100 ammoCount the tests work, Idk what to do
     public Tank(int x, int y, Direction direction, Dice dice, int ticksPerBullets) {
         super(x, y, direction);
         gun = new Gun(ticksPerBullets);
@@ -46,7 +48,7 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
         moving = false;
         alive = true;
         this.dice = dice;
-        this.goldenAmmoCount = 6;
+        this.goldenAmmoCount = 100;
     }
 
     public Tank(int x, int y, Direction direction, Dice dice, int ticksPerBullets,int goldenAmmoCount) {
@@ -154,7 +156,6 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
 
     public void removeBullets() {
         bullets.clear();
-//        this.goldenAmmoCount = 6;
     }
 
     @Override

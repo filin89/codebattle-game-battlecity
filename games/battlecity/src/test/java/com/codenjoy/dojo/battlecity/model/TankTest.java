@@ -19,7 +19,6 @@ public class TankTest {
     private int ticksPerBullets;
     private Battlecity game;
     private int size;
-//    private List<Player> players = new LinkedList<>();
 
 
     @Before
@@ -30,17 +29,13 @@ public class TankTest {
 
     @Test
     public void ammoCountAfterTwoShot() {
-//        Tank tank = tank(0, 0, Direction.UP);
         givenGameWithTankAt(1, 1);
         Tank tank = game.getTanks().get(0);
         tank.act();
         game.tick();
         tank.act();
         game.tick();
-//        hero.act();
-//        game.tick();
-//        hero.act();
-//        Tank realTank = (Tank) hero;
+
         assertEquals(4, tank.getGoldenAmmoCount());
     }
 
@@ -53,18 +48,14 @@ public class TankTest {
         tank.act();
         game.tick();
         assertEquals(Collections.emptyList(),tank.getBullets());
-//        assertThat(tank.getBullets(),Collections.emptyList());
 
 
     }
 
-    @Test
-    public void removeBullets() {
-    }
 
     public Tank tank(int x, int y, Direction direction) {
         Dice dice = getDice(x, y);
-        return new Tank(x, y, direction, dice, ticksPerBullets);
+        return new Tank(x, y, direction, dice, ticksPerBullets,6);
     }
 
     private static Dice getDice(int x, int y) {
@@ -89,7 +80,6 @@ public class TankTest {
     private void givenGame(Tank tank, Construction... constructions) {
         game = new Battlecity(size, Arrays.asList(constructions));
         initPlayer(game, tank);
-//        this.hero = tank;
     }
 
     public void givenGameWithTankAt(int x, int y, Direction direction) {
