@@ -15,6 +15,7 @@ import static org.mockito.Mockito.when;
 
 public class TankTest {
 
+    private static final int AMMO_COUNT = 6;
 
     private int ticksPerBullets;
     private Battlecity game;
@@ -36,17 +37,15 @@ public class TankTest {
         tank.act();
         game.tick();
 
-        assertEquals(4, tank.getGoldenAmmoCount());
+        assertEquals(4, tank.getAmmunition().getAmmoCount());
     }
 
     @Test
     public void ammoIsEmpty(){
         givenGameWithTankAt(1, 1);
         Tank tank = game.getTanks().get(0);
-        tank.setGoldenAmmoCount(0);
+        tank.getAmmunition().setAmmoCount(0);
 
-        tank.act();
-        game.tick();
         assertEquals(Collections.emptyList(),tank.getBullets());
 
 
@@ -55,7 +54,7 @@ public class TankTest {
 
     public Tank tank(int x, int y, Direction direction) {
         Dice dice = getDice(x, y);
-        return new Tank(x, y, direction, dice, ticksPerBullets,6);
+        return new Tank(x, y, direction, dice, ticksPerBullets,AMMO_COUNT);
     }
 
     private static Dice getDice(int x, int y) {

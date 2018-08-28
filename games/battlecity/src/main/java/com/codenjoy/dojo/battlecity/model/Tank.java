@@ -33,6 +33,7 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
     private Dice dice;
     private List<Bullet> bullets;
     private int goldenAmmoCount;
+    private Ammunition ammunition;
     protected Field field;
     private boolean alive;
     private Gun gun;
@@ -40,18 +41,9 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
 
 //The constructor is used in old tests, where there is no restriction on ammo,
 // with 100 ammoCount the tests work, Idk what to do
-    public Tank(int x, int y, Direction direction, Dice dice, int ticksPerBullets) {
-        super(x, y, direction);
-        gun = new Gun(ticksPerBullets);
-        bullets = new LinkedList<Bullet>();
-        speed = 1;
-        moving = false;
-        alive = true;
-        this.dice = dice;
-        this.goldenAmmoCount = 100;
-    }
 
-    public Tank(int x, int y, Direction direction, Dice dice, int ticksPerBullets,int goldenAmmoCount) {
+
+    public Tank(int x, int y, Direction direction, Dice dice, int ticksPerBullets, int ammoCount) {
         super(x, y, direction);
         gun = new Gun(ticksPerBullets);
         bullets = new LinkedList<Bullet>();
@@ -59,7 +51,8 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
         moving = false;
         alive = true;
         this.dice = dice;
-        this.goldenAmmoCount = goldenAmmoCount;
+//        this.goldenAmmoCount = goldenAmmoCount;
+        this.ammunition = new Ammunition(ammoCount);
     }
 
     void turn(Direction direction) {
@@ -100,26 +93,29 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
             y = newY;
         }
         if (field.isAmmoBonus(newX, newY)){
-            this.goldenAmmoCount += 5;
+            ammunition.replenishAmmo();
         }
         moving = false;
     }
 
     @Override
     public void act(int... p) {
-        if (this.goldenAmmoCount == 0) {
-            return;
-        }
-        if (gun.tryToFire()) {
-            this.goldenAmmoCount--;
-            Bullet bullet = new Bullet(field, direction, copy(), this, new OnDestroy() {
-                @Override
-                public void destroy(Object bullet) {
-                    Tank.this.bullets.remove(bullet);
+//        if (this.goldenAmmoCount == 0) {
+//            return;
+//        }
+        if (ammunition.enoughAmmo()) {
+            if (gun.tryToFire()) {
+//                this.goldenAmmoCount--;
+                Bullet bullet = new Bullet(field, direction, copy(), this, new OnDestroy() {
+                    @Override
+                    public void destroy(Object bullet) {
+                        Tank.this.bullets.remove(bullet);
+                    }
+                });
+                ammunition.ammoAfterShotDecrement();
+                if (!bullets.contains(bullet)) {
+                    bullets.add(bullet);
                 }
-            });
-            if (!bullets.contains(bullet)) {
-                bullets.add(bullet);
             }
         }
     }
@@ -165,6 +161,10 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
 
     public int getGoldenAmmoCount() {
         return goldenAmmoCount;
+    }
+
+    public Ammunition getAmmunition() {
+        return ammunition;
     }
 
     public void setGoldenAmmoCount(int goldenAmmoCount) {

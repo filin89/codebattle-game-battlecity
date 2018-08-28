@@ -212,6 +212,7 @@ public class Battlecity implements Tickable, ITanks, Field {
     private Player getPlayer(Tank tank) {
         for (Player player : players) {
             if (player.getTank().equals(tank)) {
+
                 return player;
             }
         }

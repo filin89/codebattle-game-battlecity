@@ -52,10 +52,13 @@ public class BattlecityTest {
 
     private PrinterFactory printerFactory = new PrinterFactoryImpl();
 
+    private int ammoCount;
+
     @Before
     public void setup() {
         size = 7;
         ticksPerBullets = 1;
+        ammoCount = 100;
     }
 
     private void givenGame(Tank tank, Construction... constructions) {
@@ -98,7 +101,7 @@ public class BattlecityTest {
 
     public Tank tank(int x, int y, Direction direction) {
         Dice dice = getDice(x, y);
-        return new Tank(x, y, direction, dice, ticksPerBullets);
+        return new Tank(x, y, direction, dice, ticksPerBullets,ammoCount);
     }
 
     private static Dice getDice(int x, int y) {
