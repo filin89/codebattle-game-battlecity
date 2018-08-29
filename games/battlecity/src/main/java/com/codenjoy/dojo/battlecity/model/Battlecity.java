@@ -23,10 +23,20 @@ package com.codenjoy.dojo.battlecity.model;
  */
 
 
-
-import com.codenjoy.dojo.battlecity.model.levels.DefaultBorders;
-import com.codenjoy.dojo.battlecity.services.Events;
-import com.codenjoy.dojo.services.*;
+import com.codenjoy.dojo.battlecity.model.events.YouKilledTankEvent;
+import com.codenjoy.dojo.battlecity.model.events.YourTankWasKilledEvent;
+import com.codenjoy.dojo.battlecity.model.levels.Level;
+import com.codenjoy.dojo.battlecity.model.levels.LevelInfo;
+import com.codenjoy.dojo.battlecity.model.levels.LevelRegistry;
+import com.codenjoy.dojo.battlecity.model.modes.BattlecityGameMode;
+import com.codenjoy.dojo.battlecity.model.modes.GameModeRegistry;
+import com.codenjoy.dojo.battlecity.services.Scores;
+import com.codenjoy.dojo.services.Dice;
+import com.codenjoy.dojo.services.Direction;
+import com.codenjoy.dojo.services.Joystick;
+import com.codenjoy.dojo.services.Point;
+import com.codenjoy.dojo.services.RandomDice;
+import com.codenjoy.dojo.services.Tickable;
 import com.codenjoy.dojo.services.printer.BoardReader;
 
 import java.util.LinkedList;
@@ -37,37 +47,88 @@ public class Battlecity implements Tickable, ITanks, Field {
     private Dice dice;
     private LinkedList<Tank> aiTanks;
     private int aiCount;
-
     private int size;
     private List<Construction> constructions;
     private List<Border> borders;
+    private List<Player> players = new LinkedList<>();
+    private TankFactory aiTankFactory;
+    private GameSettings settings;
+    private BattlecityGameMode gameMode;
+    private GameController gameController;
+    private GameModeRegistry modeRegistry;
+    private LevelRegistry levelRegistry;
 
-    private List<Player> players = new LinkedList<Player>();
+    public Battlecity(TankFactory aiTankFactory,
+                      GameSettings settings,
+                      LevelRegistry levelRegistry) {
 
-    public Battlecity(int size, List<Construction> constructions, Tank... aiTanks) {
-        this(size, constructions, new DefaultBorders(size).get(), aiTanks);
+        this.levelRegistry = levelRegistry;
+        this.aiTankFactory = aiTankFactory;
+        this.settings = settings;
+        this.gameController = new BattleCityGameController();
+        setDice(new RandomDice()); // TODO вынести это чудо за пределы конструктора
     }
 
-    public Battlecity(int size, List<Construction> constructions,
-                      List<Border> borders, Tank... aiTanks) {
-        setDice(new RandomDice()); // TODO вынести это чудо за пределы конструктора
-        aiCount = aiTanks.length;
-        this.size = size;
-        this.aiTanks = new LinkedList<Tank>();
-        this.constructions = new LinkedList<Construction>(constructions);
-        this.borders = new LinkedList<Border>(borders);
+    public void startOrRestartGame() {
+        loadLevel(settings.getMap().getValue());
+        loadGameMode( settings.getGameMode().getValue());
+    }
 
-        for (Tank tank : aiTanks) {
-            addAI(tank);
-        }
+    private void loadLevel(String mapName) {
+        LevelInfo levelInfo = levelRegistry.getLevelByName(mapName);
+        Level level = new Level(levelInfo.getMap(), aiTankFactory);
+
+        aiCount = level.getTanks().size();
+        this.size = level.size();
+        this.aiTanks = new LinkedList<>();
+        this.constructions = new LinkedList<>(level.getConstructions());
+        this.borders = new LinkedList<>(level.getBorders());
     }
 
     @Override
     public void tick() {
+        checkRequireReloadLevel();
+
         removeDeadTanks();
 
-        newAI();
+        gameMode.beforeTick();
 
+        processGameElements();
+
+        gameMode.afterTick();
+    }
+
+    private void reloadLevelAndMode() {
+        clearGamesObjects();
+
+        startOrRestartGame();
+    }
+
+    private void loadGameMode(String gameModeName) {
+        gameMode = modeRegistry.getGameModeByName(gameModeName);
+    }
+
+    private void checkRequireReloadLevel() {
+        if (settings.getGameMode().changed()) {
+            settings.getGameMode().changesReacted();
+            reloadLevelAndMode();
+        } else if (settings.getMap().changed()) {
+            settings.getMap().changesReacted();
+            reloadLevelAndMode();
+        }
+    }
+
+    private void clearGamesObjects() {
+        getBullets().forEach(Bullet::onDestroy);
+        getBullets().clear();
+
+        getTanks().forEach(t -> t.kill(null));
+        getTanks().clear();
+
+        players.clear();
+    }
+
+    private void processGameElements() {
         for (Tank tank : getTanks()) {
             tank.tick();
         }
@@ -97,22 +158,6 @@ public class Battlecity implements Tickable, ITanks, Field {
         for (Construction construction : constructions) {
             if (!getTanks().contains(construction) && !getBullets().contains(construction)) {
                 construction.tick();
-            }
-        }
-    }
-
-    private void newAI() {
-        for (int count = aiTanks.size(); count < aiCount; count++) {
-            int y = size - 2;
-            int x = 0;
-            int c = 0;
-            do {
-                x = dice.next(size);
-                c++;
-            } while (isBarrier(x, y) & c < size);
-
-            if (!isBarrier(x, y)) {
-                addAI(new AITank(x, y, dice, Direction.DOWN));
             }
         }
     }
@@ -157,7 +202,7 @@ public class Battlecity implements Tickable, ITanks, Field {
                 return;
             }
 
-            scoresForKill(bullet, tank);
+            triggerEventForTankKill(bullet, tank);
 
             tank.kill(bullet);
             bullet.onDestroy();  // TODO заимплементить взрыв
@@ -189,10 +234,13 @@ public class Battlecity implements Tickable, ITanks, Field {
         return constructions.get(index);
     }
 
-    private void scoresForKill(Bullet killedBullet, Tank diedTank) {
+    private void triggerEventForTankKill(Bullet killedBullet, Tank diedTank) {
         Player died = null;
+        Tank.Type killedTankType = Tank.Type.AI;
+
         if (!aiTanks.contains(diedTank)) {
-             died = getPlayer(diedTank);
+            died = getPlayer(diedTank);
+            killedTankType = Tank.Type.Player;
         }
 
         Tank killerTank = killedBullet.getOwner();
@@ -202,10 +250,10 @@ public class Battlecity implements Tickable, ITanks, Field {
         }
 
         if (killer != null) {
-            killer.event(Events.KILL_OTHER_TANK);
+            killer.event(new YouKilledTankEvent(killedTankType));
         }
         if (died != null) {
-            died.event(Events.KILL_YOUR_TANK);
+            died.event(new YourTankWasKilledEvent());
         }
     }
 
@@ -251,7 +299,7 @@ public class Battlecity implements Tickable, ITanks, Field {
 
     @Override
     public List<Bullet> getBullets() {
-        List<Bullet> result = new LinkedList<Bullet>();
+        List<Bullet> result = new LinkedList<>();
         for (Tank tank : getTanks()) {
             for (Bullet bullet : tank.getBullets()) {
                 result.add(bullet);
@@ -262,7 +310,7 @@ public class Battlecity implements Tickable, ITanks, Field {
 
     @Override
     public List<Tank> getTanks() {
-        LinkedList<Tank> result = new LinkedList<Tank>(aiTanks);
+        LinkedList<Tank> result = new LinkedList<>(aiTanks);
         for (Player player : players) {
 //            if (player.getTank().isAlive()) { // TODO разремарить с тестом
                 result.add(player.getTank());
@@ -301,7 +349,7 @@ public class Battlecity implements Tickable, ITanks, Field {
 
             @Override
             public Iterable<? extends Point> elements() {
-                List<Point> result = new LinkedList<Point>();
+                List<Point> result = new LinkedList<>();
                 result.addAll(Battlecity.this.getBorders());
                 result.addAll(Battlecity.this.getTanks());
                 result.addAll(Battlecity.this.getConstructions());
@@ -313,7 +361,7 @@ public class Battlecity implements Tickable, ITanks, Field {
 
     @Override
     public List<Construction> getConstructions() {
-        List<Construction> result = new LinkedList<Construction>();
+        List<Construction> result = new LinkedList<>();
         for (Construction construction : constructions) {
             if (!construction.destroyed()) {
                 result.add(construction);
@@ -330,5 +378,45 @@ public class Battlecity implements Tickable, ITanks, Field {
     public void setDice(Dice dice) {
         this.dice = dice;
     }
+
+    public void onScoresEvent(Object event, Scores scores) {
+        gameMode.onScoresEvent(event, scores);
+    }
+
+    public void setModeRegistry(GameModeRegistry modeRegistry) {
+        this.modeRegistry = modeRegistry;
+    }
+
+    class BattleCityGameController implements GameController {
+        @Override
+        public void createAITanks() {
+            for (Tank tank : aiTanks) {
+                addAI(tank);
+            }
+        }
+
+        @Override
+        public void newAI() {
+            for (int count = aiTanks.size(); count < aiCount; count++) {
+                int y = size - 2;
+                int x = 0;
+                int c = 0;
+                do {
+                    x = dice.next(size);
+                    c++;
+                } while (isBarrier(x, y) & c < size);
+
+                if (!isBarrier(x, y)) {
+                    addAI(aiTankFactory.createTank(
+                            TankParams.newAITankParams(x, y, Direction.DOWN)));
+                }
+            }
+        }
+    }
+
+    public GameController getGameController() {
+        return gameController;
+    }
+
 
 }

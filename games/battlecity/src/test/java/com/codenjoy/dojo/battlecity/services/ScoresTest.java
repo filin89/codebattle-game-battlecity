@@ -54,7 +54,10 @@ public class ScoresTest {
     @Before
     public void setup() {
         settings = new SettingsImpl();
-        scores = new Scores(0, settings);
+        scores = new Scores(0, settings) {
+            @Override
+            public void event(Object event) { }
+        };
 
         killYourTankPenalty = settings.getParameter("Kill your tank penalty").type(Integer.class).getValue();
         killOtherTankScore = settings.getParameter("Kill other tank score").type(Integer.class).getValue();
@@ -62,7 +65,10 @@ public class ScoresTest {
 
     @Test
     public void shouldCollectScores() {
-        scores = new Scores(140, settings);
+        scores = new Scores(140, settings) {
+            @Override
+            public void event(Object event) { }
+        };
 
         killOtherTank();  //+100
         killOtherTank();  //+100

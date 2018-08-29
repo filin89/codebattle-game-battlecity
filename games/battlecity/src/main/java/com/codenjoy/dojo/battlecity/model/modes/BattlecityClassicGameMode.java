@@ -1,4 +1,4 @@
-package com.codenjoy.dojo.battlecity.model;
+package com.codenjoy.dojo.battlecity.model.modes;
 
 /*-
  * #%L
@@ -22,40 +22,22 @@ package com.codenjoy.dojo.battlecity.model;
  * #L%
  */
 
-import com.codenjoy.dojo.services.settings.Parameter;
+import com.codenjoy.dojo.battlecity.model.GameController;
 
-public class Ammunition {
+public class BattlecityClassicGameMode extends DefaultBattlecityGameMode {
 
-    private int ammoCount;
-    private Parameter<Integer> initialAmmoCount;
-
-    public Ammunition(Parameter<Integer> initialAmmoCount) {
-        this.ammoCount = initialAmmoCount.getValue();
-        this.initialAmmoCount = initialAmmoCount;
+    public BattlecityClassicGameMode(GameController controller) {
+        super(controller);
     }
 
-    public void replenishAmmo(int bonusAmmo){
-        ammoCount += bonusAmmo;
+    @Override
+    public void startGame() {
+        controller.createAITanks();
     }
 
-    public void ammoAfterShotDecrement(){
-        ammoCount--;
+    @Override
+    public void beforeTick() {
+        controller.newAI();
     }
 
-    public int getAmmoCount() {
-        return ammoCount;
-    }
-
-    public void setAmmoCount(int ammoCount) {
-        this.ammoCount = ammoCount;
-    }
-
-    public boolean enoughAmmo(){
-       return ammoCount > 0; 
-    }
-
-
-    public void refreshAmmo() {
-        ammoCount = initialAmmoCount.getValue();
-    }
 }

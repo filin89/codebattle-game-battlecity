@@ -25,14 +25,14 @@ package com.codenjoy.dojo.battlecity.model;
 
 import com.codenjoy.dojo.services.Dice;
 import com.codenjoy.dojo.services.Direction;
+import com.codenjoy.dojo.services.settings.Parameter;
 
 public class AITank extends Tank {
 
     private int act;
-    private static final int AMMO_COUNT = 6;
 
-    public AITank(int x, int y, Dice dice, Direction direction) {
-        super(x, y, direction, dice, 1,AMMO_COUNT);
+    public AITank(int x, int y, Dice dice, Direction direction, Parameter<Integer> initialAmmo) {
+        super(x, y, direction, dice, 1, initialAmmo);
     }
 
     @Override

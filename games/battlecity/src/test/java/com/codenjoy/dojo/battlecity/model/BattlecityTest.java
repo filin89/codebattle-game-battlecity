@@ -28,6 +28,8 @@ import com.codenjoy.dojo.services.*;
 import com.codenjoy.dojo.services.printer.Printer;
 import com.codenjoy.dojo.services.printer.PrinterFactory;
 import com.codenjoy.dojo.services.printer.PrinterFactoryImpl;
+import com.codenjoy.dojo.services.settings.SimpleParameter;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -62,7 +64,7 @@ public class BattlecityTest {
     }
 
     private void givenGame(Tank tank, Construction... constructions) {
-        game = new Battlecity(size, Arrays.asList(constructions));
+        game = new Battlecity(null, null, null);
         initPlayer(game, tank);
         this.hero = tank;
     }
@@ -71,13 +73,13 @@ public class BattlecityTest {
         List<Border> borders = new DefaultBorders(size).get();
         borders.addAll(Arrays.asList(walls));
 
-        game = new Battlecity(size, Arrays.asList(new Construction[0]), borders);
+        game = new Battlecity(null, null, null);
         initPlayer(game, tank);
         this.hero = tank;
     }
 
     private void givenGameWithAI(Tank tank, Tank... aiTanks) {
-        game = new Battlecity(size, Arrays.asList(new Construction[0]), aiTanks);
+        game = new Battlecity(null, null, null);
         initPlayer(game, tank);
         this.hero = tank;
     }
@@ -92,7 +94,7 @@ public class BattlecityTest {
     }
 
     private void givenGameWithTanks(Tank... tanks) {
-        game = new Battlecity(size, Arrays.asList(new Construction[]{}));
+        game = new Battlecity(null, null, null);
         for (Tank tank : tanks) {
             initPlayer(game, tank);
         }
@@ -101,7 +103,7 @@ public class BattlecityTest {
 
     public Tank tank(int x, int y, Direction direction) {
         Dice dice = getDice(x, y);
-        return new Tank(x, y, direction, dice, ticksPerBullets,ammoCount);
+        return new Tank(x, y, direction, dice, ticksPerBullets, new SimpleParameter<>(5));
     }
 
     private static Dice getDice(int x, int y) {
@@ -1912,7 +1914,7 @@ public class BattlecityTest {
 
     public static Player player(int x, int y, EventListener listener) {
         Dice dice = getDice(x, y);
-        return new Player(listener, dice);
+        return new Player(listener, null);
     }
 
     @Ignore
@@ -2038,7 +2040,7 @@ public class BattlecityTest {
 
     public static Player player(int x1, int y1, int x2, int y2, EventListener listener) {
         Dice dice = getDice(x1, y1, x2, y2);
-        return new Player(listener, dice);
+        return new Player(listener, null);
     }
 
     private static Dice getDice(int x1, int y1, int x2, int y2) {

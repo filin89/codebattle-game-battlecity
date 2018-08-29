@@ -24,38 +24,35 @@ package com.codenjoy.dojo.battlecity.model;
 
 import com.codenjoy.dojo.services.settings.Parameter;
 
-public class Ammunition {
+public class FiniteAmmo implements Ammo {
 
-    private int ammoCount;
-    private Parameter<Integer> initialAmmoCount;
+    private Parameter<Integer> initialAmmo;
+    private int availableAmmo;
 
-    public Ammunition(Parameter<Integer> initialAmmoCount) {
-        this.ammoCount = initialAmmoCount.getValue();
-        this.initialAmmoCount = initialAmmoCount;
+    public FiniteAmmo(Parameter<Integer> initialAmmo) {
+        this.initialAmmo = initialAmmo;
+        availableAmmo = initialAmmo.getValue();
     }
 
-    public void replenishAmmo(int bonusAmmo){
-        ammoCount += bonusAmmo;
+    @Override
+    public boolean hasAvailableAmmo() {
+        return availableAmmo > 0;
     }
 
-    public void ammoAfterShotDecrement(){
-        ammoCount--;
+    @Override
+    public void onFire() {
+        if (availableAmmo > 0) {
+            availableAmmo--;
+        }
     }
 
-    public int getAmmoCount() {
-        return ammoCount;
+    @Override
+    public void addAmmo(int ammoToAdd) {
+        availableAmmo += ammoToAdd;
     }
 
-    public void setAmmoCount(int ammoCount) {
-        this.ammoCount = ammoCount;
-    }
-
-    public boolean enoughAmmo(){
-       return ammoCount > 0; 
-    }
-
-
+    @Override
     public void refreshAmmo() {
-        ammoCount = initialAmmoCount.getValue();
+        availableAmmo = initialAmmo.getValue();
     }
 }

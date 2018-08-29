@@ -35,9 +35,9 @@ public class Single implements Game {    // TODO test me
     private Battlecity game;
     private Printer<String> printer;
 
-    public Single(Battlecity game, EventListener listener, PrinterFactory factory, Dice dice) {
+    public Single(Battlecity game, EventListener listener, PrinterFactory factory, TankFactory playerTankFactory) {
         this.game = game;
-        this.player = new Player(listener, dice);
+        this.player = new Player(listener, playerTankFactory);
         this.printer = factory.getPrinter(game.reader(), player);
     }
 
@@ -48,12 +48,12 @@ public class Single implements Game {    // TODO test me
 
     @Override
     public int getMaxScore() {
-        return player.getMaxScore();
+        return 0;
     }
 
     @Override
     public int getCurrentScore() {
-        return player.getScore();
+        return 0;
     }
 
     @Override
@@ -77,9 +77,7 @@ public class Single implements Game {    // TODO test me
     }
 
     @Override
-    public void clearScore() {
-        player.clearScore();
-    }
+    public void clearScore() { }
 
     @Override
     public HeroData getHero() {

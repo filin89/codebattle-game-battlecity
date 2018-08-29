@@ -24,16 +24,28 @@ package com.codenjoy.dojo.battlecity.services;
 
 
 import com.codenjoy.dojo.battlecity.client.ai.ApofigSolver;
+import com.codenjoy.dojo.battlecity.model.AITankFactory;
 import com.codenjoy.dojo.battlecity.model.Battlecity;
 import com.codenjoy.dojo.battlecity.model.Elements;
+import com.codenjoy.dojo.battlecity.model.GameSettings;
+import com.codenjoy.dojo.battlecity.model.GameSettingsImpl;
+import com.codenjoy.dojo.battlecity.model.PlayerTankFactory;
 import com.codenjoy.dojo.battlecity.model.Single;
-import com.codenjoy.dojo.battlecity.model.Tank;
-import com.codenjoy.dojo.battlecity.model.levels.Level;
+import com.codenjoy.dojo.battlecity.model.levels.ResourcesLevelRegistryImpl;
+import com.codenjoy.dojo.battlecity.model.TankFactory;
+import com.codenjoy.dojo.battlecity.model.modes.GameModeRegistry;
+import com.codenjoy.dojo.battlecity.model.modes.StaticGameModeRegistryImpl;
 import com.codenjoy.dojo.client.WebSocketRunner;
-import com.codenjoy.dojo.services.*;
+import com.codenjoy.dojo.services.AbstractGameType;
+import com.codenjoy.dojo.services.EventListener;
+import com.codenjoy.dojo.services.Game;
+import com.codenjoy.dojo.services.GameType;
+import com.codenjoy.dojo.services.PlayerScores;
+import com.codenjoy.dojo.services.RandomDice;
 import com.codenjoy.dojo.services.hero.GameMode;
 import com.codenjoy.dojo.services.printer.PrinterFactory;
 import com.codenjoy.dojo.services.settings.Parameter;
+import com.codenjoy.dojo.services.settings.Settings;
 
 import static com.codenjoy.dojo.services.settings.SimpleParameter.v;
 
@@ -41,45 +53,70 @@ public class GameRunner extends AbstractGameType implements GameType {
 
     public final static boolean SINGLE = GameMode.SINGLE_MODE;
 
-    private Battlecity tanks;
-    private Level level;
+    private static final String MAPS_PREFIX = "battlecity/maps/";
+    private static final String MAP_FILES_EXTENSION = ".map";
+    private static final String BATTLECITY_GAME_NAME = "battlecity";
+
+    private Battlecity battleCityGame;
+    private TankFactory aiTankFactory;
+    private TankFactory playerTankFactory;
+    private GameSettings gameSettings;
 
     public GameRunner() {
-        new Scores(0, settings); // TODO сеттринги разделены по разным классам, продумать архитектуру
+        gameSettings = getGameSettings(settings);
 
-        level = new Level();
+        RandomDice dice = new RandomDice();
+        aiTankFactory = new AITankFactory(dice, gameSettings);
+        playerTankFactory = new PlayerTankFactory(dice, gameSettings);
     }
 
-    private Battlecity newTank() {
-        return new Battlecity(level.size(),
-                level.getConstructions(),
-                level.getBorders(),
-                level.getTanks().toArray(new Tank[0]));
+    private GameSettings getGameSettings(Settings settings) {
+        return new GameSettingsImpl(settings);
+    }
+
+    private Battlecity newBattleCityGame() {
+        Battlecity battlecity = new Battlecity(
+                aiTankFactory,
+                gameSettings,
+                new ResourcesLevelRegistryImpl(MAPS_PREFIX, MAP_FILES_EXTENSION));
+
+        GameModeRegistry modeRegistry = new StaticGameModeRegistryImpl(battlecity.getGameController());
+        battlecity.setModeRegistry(modeRegistry);
+
+        battlecity.startOrRestartGame();
+
+        return battlecity;
     }
 
     @Override
     public PlayerScores getPlayerScores(Object score) {
-        return new Scores((Integer) score, settings);
+        return new Scores((Integer) score, settings) {
+            @Override
+            public void event(Object event) {
+                battleCityGame.onScoresEvent(event, this);
+            }
+        };
     }
 
     @Override
     public Game newGame(EventListener listener, PrinterFactory factory, String save, String playerName) {
-        if (!SINGLE || tanks == null) {
-            tanks = newTank();
+        if (!SINGLE || battleCityGame == null) {
+            battleCityGame = newBattleCityGame();
         }
-        Game game = new Single(tanks, listener, factory, new RandomDice());
+        Game game = new Single(battleCityGame, listener, factory, playerTankFactory);
         game.newGame();
+
         return game;
     }
 
     @Override
     public Parameter<Integer> getBoardSize() {
-        return v(level.size());
+        return v(battleCityGame.size());
     }
 
     @Override
     public String name() {
-        return "battlecity";
+        return BATTLECITY_GAME_NAME;
     }
 
     @Override

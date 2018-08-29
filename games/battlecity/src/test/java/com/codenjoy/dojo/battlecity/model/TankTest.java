@@ -1,5 +1,27 @@
 package com.codenjoy.dojo.battlecity.model;
 
+/*-
+ * #%L
+ * Codenjoy - it's a dojo-like platform from developers to developers.
+ * %%
+ * Copyright (C) 2016 - 2018 Codenjoy
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #L%
+ */
+
 import com.codenjoy.dojo.services.Dice;
 import com.codenjoy.dojo.services.Direction;
 import org.junit.Before;
@@ -60,7 +82,7 @@ public class TankTest {
 
     public Tank tank(int x, int y, Direction direction) {
         Dice dice = getDice(x, y);
-        return new Tank(x, y, direction, dice, ticksPerBullets,AMMO_COUNT);
+        return new Tank(x, y, direction, dice, ticksPerBullets, null);
     }
 
     private static Dice getDice(int x, int y) {
@@ -82,13 +104,11 @@ public class TankTest {
     }
 
     private void givenGame(Tank tank, Construction... constructions) {
-        game = new Battlecity(size, Arrays.asList(constructions));
+        game = new Battlecity(null, null, null);
         initPlayer(game, tank);
     }
 
     public void givenGameWithTankAt(int x, int y, Direction direction) {
         givenGame(tank(x, y, direction), new Construction[]{});
     }
-
-
 }

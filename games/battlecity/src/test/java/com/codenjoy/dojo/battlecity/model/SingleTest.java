@@ -46,15 +46,15 @@ public class SingleTest {
     private Single tanks1;
     private Single tanks2;
     private Player player1;
-    private Player player2;
     private PrinterFactory printerFactory = new PrinterFactoryImpl();
+    private TankFactory aiTankFactory = new AITankFactory(dice1, null);
+    private TankFactory playerTankFactory = new PlayerTankFactory(dice1, null);
 
     public void givenGame() {
-        game = new Battlecity(size, Arrays.asList(new Construction[0]));
-        tanks1 = new Single(game, null, printerFactory, dice1);
-        tanks2 = new Single(game, null, printerFactory, dice2);
+        game = new Battlecity(null, null, null);
+        tanks1 = new Single(game, null, printerFactory, new PlayerTankFactory(dice1, null));
+        tanks2 = new Single(game, null, printerFactory, new PlayerTankFactory(dice2, null));
         player1 = tanks1.getPlayer();
-        player2 = tanks2.getPlayer();
     }
 
     @Test
