@@ -54,6 +54,7 @@ public class GameRunner extends AbstractGameType implements GameType {
         return new Battlecity(level.size(),
                 level.getConstructions(),
                 level.getBorders(),
+                level.getHedgeHogs(),
                 level.getTanks().toArray(new Tank[0]));
     }
 

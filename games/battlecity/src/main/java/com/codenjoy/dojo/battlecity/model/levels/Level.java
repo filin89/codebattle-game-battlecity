@@ -41,25 +41,25 @@ public class Level implements Field {
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
-            "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬ ☼ ☼ ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬ ☼ ☼ ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
+            "☼     ╬ ╬ ╬  ͱ  ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬                         ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
-            "☼     ╬ ╬ ╬     ╬ ╬ ╬                         ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
+            "☼     ╬ ╬ ╬     ╬ ╬ ╬           ͱ ͱ ͱ ͱ ͱ ͱ ͱ ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
+            "☼                         ╬ ╬ ╬ ͱ ͱ ╬ ╬ ╬   ͱ                     ☼ " +
+            "☼                         ╬ ╬ ╬ ͱ ͱ ╬ ╬ ╬   ͱ             ͱ       ☼ " +
+            "☼           ╬ ╬ ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬   ͱ  ╬ ╬ ╬ ╬ ╬  ͱ       ☼ " +
+            "☼ ☼ ☼       ╬ ╬ ╬ ╬ ╬                       ͱ  ╬ ╬ ╬ ╬ ╬  ͱ   ☼ ☼ ☼ " +
+            "☼                                           ͱ ͱ ͱ ͱ ͱ ͱ           ☼ " +
             "☼                         ╬ ╬ ╬     ╬ ╬ ╬                         ☼ " +
-            "☼                         ╬ ╬ ╬     ╬ ╬ ╬                         ☼ " +
-            "☼           ╬ ╬ ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬ ╬ ╬           ☼ " +
-            "☼ ☼ ☼       ╬ ╬ ╬ ╬ ╬                         ╬ ╬ ╬ ╬ ╬       ☼ ☼ ☼ " +
-            "☼                                                                 ☼ " +
-            "☼                         ╬ ╬ ╬     ╬ ╬ ╬                         ☼ " +
-            "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
+            "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬  ͱ  ╬ ╬ ╬  ͱ  ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬ ╬ ╬ ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬ ╬ ╬ ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
-            "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
+            "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬  ͱ  ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬                                             ╬ ╬ ╬     ☼ " +
@@ -88,15 +88,57 @@ public class Level implements Field {
         return (int) Math.sqrt(map.length());
     }
 
+
+    // добавление кирпичей на доску
     @Override
     public List<Construction> getConstructions() {
         List<Construction> result = new LinkedList<Construction>();
         for (int index = 0; index < map.length(); index++) {
-            if (map.charAt(index) == Elements.CONSTRUCTION.ch) {
-                result.add(new Construction(xy.getXY(index)));
+            if (map.charAt(index) == Elements.CONSTRUCTION.ch) { // если эл на карте из enum эл-ов конструкции
+                result.add(new Construction(xy.getXY(index))); // получим для него координаты по формуле, сформируем из них точку PointImpl
             }
         }
         return result;
+    }
+
+
+    @Override
+    public List<Tank> getTanks() {
+        List<Tank> result = new LinkedList<Tank>();
+        for (int index = 0; index < map.length(); index++) {
+            if (map.charAt(index) == Elements.AI_TANK_DOWN.ch) { // все танки изначально размещаются направленными вниз
+                Point pt = xy.getXY(index);
+                result.add(new AITank(pt.getX(), pt.getY(), new RandomDice(), Direction.DOWN));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<Border> getBorders() {
+        List<Border> result = new LinkedList<Border>();
+        for (int index = 0; index < map.length(); index++) {
+            if (map.charAt(index) == Elements.BATTLE_WALL.ch) {
+                result.add(new Border(xy.getXY(index)));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<HedgeHog> getHedgeHogs() {
+        List<HedgeHog> result = new LinkedList<>();
+        for (int index = 0; index < map.length(); index++) {
+            if (map.charAt(index) == Elements.HEDGEHOG.ch) {
+                result.add(new HedgeHog(xy.getXY(index)));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<Bullet> getBullets() {
+        return new LinkedList<Bullet>(); // do nothing
     }
 
     @Override
@@ -115,11 +157,6 @@ public class Level implements Field {
     }
 
     @Override
-    public List<Bullet> getBullets() {
-        return new LinkedList<Bullet>(); // do nothing
-    }
-
-    @Override
     public BoardReader reader() {
         return new BoardReader() {
             @Override
@@ -127,6 +164,7 @@ public class Level implements Field {
                 return Level.this.size();
             }
 
+            // все элементы в итоге добавляются в список
             @Override
             public Iterable<? extends Point> elements() {
                 List<Point> result = new LinkedList<Point>();
@@ -134,31 +172,13 @@ public class Level implements Field {
                 result.addAll(Level.this.getBullets());
                 result.addAll(Level.this.getConstructions());
                 result.addAll(Level.this.getTanks());
+                result.addAll(Level.this.getHedgeHogs()); // сюда надо добавить ежа
                 return result;
             }
         };
     }
 
-    @Override
-    public List<Tank> getTanks() {
-        List<Tank> result = new LinkedList<Tank>();
-        for (int index = 0; index < map.length(); index++) {
-            if (map.charAt(index) == Elements.AI_TANK_DOWN.ch) {
-                Point pt = xy.getXY(index);
-                result.add(new AITank(pt.getX(), pt.getY(), new RandomDice(), Direction.DOWN));
-            }
-        }
-        return result;
-    }
 
-    @Override
-    public List<Border> getBorders() {
-        List<Border> result = new LinkedList<Border>();
-        for (int index = 0; index < map.length(); index++) {
-            if (map.charAt(index) == Elements.BATTLE_WALL.ch) {
-                result.add(new Border(xy.getXY(index)));
-            }
-        }
-        return result;
-    }
+
+
 }

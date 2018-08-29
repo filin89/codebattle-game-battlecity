@@ -41,21 +41,23 @@ public class Battlecity implements Tickable, ITanks, Field {
     private int size;
     private List<Construction> constructions;
     private List<Border> borders;
+    private List<HedgeHog> hedgeHogs;
 
     private List<Player> players = new LinkedList<Player>();
 
-    public Battlecity(int size, List<Construction> constructions, Tank... aiTanks) {
-        this(size, constructions, new DefaultBorders(size).get(), aiTanks);
+    public Battlecity(int size, List<Construction> constructions, List<HedgeHog> hedgeHogs, Tank... aiTanks) {
+        this(size, constructions, new DefaultBorders(size).get(), hedgeHogs, aiTanks);
     }
 
     public Battlecity(int size, List<Construction> constructions,
-                      List<Border> borders, Tank... aiTanks) {
+                      List<Border> borders, List<HedgeHog> hedgeHogs, Tank... aiTanks) {
         setDice(new RandomDice()); // TODO вынести это чудо за пределы конструктора
         aiCount = aiTanks.length;
         this.size = size;
         this.aiTanks = new LinkedList<Tank>();
         this.constructions = new LinkedList<Construction>(constructions);
         this.borders = new LinkedList<Border>(borders);
+        this.hedgeHogs = new LinkedList<HedgeHog>(hedgeHogs);
 
         for (Tank tank : aiTanks) {
             addAI(tank);
@@ -219,7 +221,7 @@ public class Battlecity implements Tickable, ITanks, Field {
         throw new RuntimeException("Танк игрока не найден!");
     }
 
-    @Override
+    @Override // Здесь проходимся при инициализации
     public boolean isBarrier(int x, int y) {
         for (Construction construction : constructions) {
             if (construction.itsMe(x, y) && !construction.destroyed()) {
@@ -233,6 +235,11 @@ public class Battlecity implements Tickable, ITanks, Field {
         }
         for (Tank tank : getTanks()) {   //  TODO проверить как один танк не может проходить мимо другого танка игрока (не AI)
             if (tank.itsMe(x, y)) {
+                return true;
+            }
+        }
+        for (Point hedgehog : hedgeHogs) {
+            if (hedgehog.itsMe(x, y)) {
                 return true;
             }
         }
@@ -301,6 +308,7 @@ public class Battlecity implements Tickable, ITanks, Field {
                 result.addAll(Battlecity.this.getTanks());
                 result.addAll(Battlecity.this.getConstructions());
                 result.addAll(Battlecity.this.getBullets());
+                result.addAll(Battlecity.this.getHedgeHogs());
                 return result;
             }
         };
@@ -320,6 +328,11 @@ public class Battlecity implements Tickable, ITanks, Field {
     @Override
     public List<Border> getBorders() {
         return borders;
+    }
+
+    @Override
+    public List<HedgeHog> getHedgeHogs() {
+        return hedgeHogs;
     }
 
     public void setDice(Dice dice) {

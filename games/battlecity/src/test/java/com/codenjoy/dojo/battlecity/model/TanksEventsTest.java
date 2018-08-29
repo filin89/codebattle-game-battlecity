@@ -53,7 +53,7 @@ public class TanksEventsTest {
     public void setup() {
         enemy = utils.tank(1, 5, Direction.DOWN);
 
-        game = new Battlecity(7, Arrays.asList(new Construction[0]), enemy);
+        //game = new Battlecity(7, Arrays.asList(new Construction[0]), enemy);
 
         events = mock(EventListener.class);
         player = utils.player(1, 1, 2, 2, events);

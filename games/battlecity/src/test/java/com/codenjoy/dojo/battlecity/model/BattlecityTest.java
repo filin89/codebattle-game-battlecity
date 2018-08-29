@@ -59,7 +59,7 @@ public class BattlecityTest {
     }
 
     private void givenGame(Tank tank, Construction... constructions) {
-        game = new Battlecity(size, Arrays.asList(constructions));
+        //game = new Battlecity(size, Arrays.asList(constructions));
         initPlayer(game, tank);
         this.hero = tank;
     }
@@ -68,13 +68,13 @@ public class BattlecityTest {
         List<Border> borders = new DefaultBorders(size).get();
         borders.addAll(Arrays.asList(walls));
 
-        game = new Battlecity(size, Arrays.asList(new Construction[0]), borders);
+        //game = new Battlecity(size, Arrays.asList(new Construction[0]), borders);
         initPlayer(game, tank);
         this.hero = tank;
     }
 
     private void givenGameWithAI(Tank tank, Tank... aiTanks) {
-        game = new Battlecity(size, Arrays.asList(new Construction[0]), aiTanks);
+        //game = new Battlecity(size, Arrays.asList(new Construction[0]), aiTanks);
         initPlayer(game, tank);
         this.hero = tank;
     }
@@ -89,7 +89,7 @@ public class BattlecityTest {
     }
 
     private void givenGameWithTanks(Tank... tanks) {
-        game = new Battlecity(size, Arrays.asList(new Construction[]{}));
+        //game = new Battlecity(size, Arrays.asList(new Construction[]{}));
         for (Tank tank : tanks) {
             initPlayer(game, tank);
         }

@@ -50,7 +50,7 @@ public class SingleTest {
     private PrinterFactory printerFactory = new PrinterFactoryImpl();
 
     public void givenGame() {
-        game = new Battlecity(size, Arrays.asList(new Construction[0]));
+        //game = new Battlecity(size, Arrays.asList(new Construction[0]));
         tanks1 = new Single(game, null, printerFactory, dice1);
         tanks2 = new Single(game, null, printerFactory, dice2);
         player1 = tanks1.getPlayer();

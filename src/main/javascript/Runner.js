@@ -44,10 +44,10 @@ var hostIP = '127.0.0.1';
 // var hostIP = 'tetrisj.jvmhost.net';
 
 // this is your email
-var userName = 'test@mail.ru';
+var userName = 'bakon2@gmail.com';
 // you can get this code after registration on the server with your email
 // http://server-ip:8080/codenjoy-contest/board/player/your@email.com?code=12345678901234567890
-var code = '1351323692637632922';
+var code = '14210784881070354251';
 
 var protocol = 'WS';
 

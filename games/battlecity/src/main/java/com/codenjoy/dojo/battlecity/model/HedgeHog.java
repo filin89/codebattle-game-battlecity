@@ -4,7 +4,7 @@ package com.codenjoy.dojo.battlecity.model;
  * #%L
  * Codenjoy - it's a dojo-like platform from developers to developers.
  * %%
- * Copyright (C) 2016 Codenjoy
+ * Copyright (C) 2016 - 2018 Codenjoy
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -23,28 +23,23 @@ package com.codenjoy.dojo.battlecity.model;
  */
 
 
-import com.codenjoy.dojo.services.printer.BoardReader;
+import com.codenjoy.dojo.services.Point;
+import com.codenjoy.dojo.services.PointImpl;
+import com.codenjoy.dojo.services.State;
 
-import java.util.List;
+public class HedgeHog extends PointImpl implements State<Elements, Player> {
 
-public interface Field {
-    int size();
+    public HedgeHog(int x, int y) {
+        super(x, y);
+    }
 
-    List<Border> getBorders();
+    public HedgeHog(Point point) {
+        super(point);
+    }
 
-    List<HedgeHog> getHedgeHogs();
-
-    List<Tank> getTanks();
-
-    List<Construction> getConstructions();
-
-    boolean isBarrier(int x, int y);
-
-    boolean outOfField(int x, int y);
-
-    void affect(Bullet bullet);
-
-    List<Bullet> getBullets();
-
-    BoardReader reader();
+    @Override
+    public Elements state(Player player, Object... alsoAtPoint) {
+        return Elements.HEDGEHOG;
+    }
 }
+
