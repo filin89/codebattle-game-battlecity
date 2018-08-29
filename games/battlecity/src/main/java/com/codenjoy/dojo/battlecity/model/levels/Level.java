@@ -27,13 +27,14 @@ import com.codenjoy.dojo.battlecity.model.*;
 import com.codenjoy.dojo.services.*;
 import com.codenjoy.dojo.services.printer.BoardReader;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Level implements Field {
 
     private final LengthToXY xy;
     private TankFactory aiTankFactory;
+
+
 
     private String map;
 
@@ -58,6 +59,7 @@ public class Level implements Field {
         return (int) Math.sqrt(map.length());
     }
 
+
     @Override
     public List<Construction> getConstructions() {
         List<Construction> result = new LinkedList<Construction>();
@@ -69,6 +71,7 @@ public class Level implements Field {
         return result;
     }
 
+
     @Override
     public boolean isAmmoBonus(int x, int y) {
         return false; // do nothing
@@ -76,7 +79,12 @@ public class Level implements Field {
 
     @Override
     public boolean isBarrier(int x, int y) {
-        return false; // do nothing
+        return false;
+    }
+
+    @Override
+    public boolean isFieldOccupied(int x, int y) {
+       return false;
     }
 
     @Override
@@ -115,6 +123,7 @@ public class Level implements Field {
                 result.addAll(Level.this.getBullets());
                 result.addAll(Level.this.getConstructions());
                 result.addAll(Level.this.getTanks());
+                result.addAll(Level.this.getHedgeHogs());
                 return result;
             }
         };
@@ -139,6 +148,17 @@ public class Level implements Field {
         for (int index = 0; index < map.length(); index++) {
             if (map.charAt(index) == Elements.BATTLE_WALL.ch) {
                 result.add(new Border(xy.getXY(index)));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<HedgeHog> getHedgeHogs() {
+        List<HedgeHog> result = new LinkedList<>();
+        for (int index = 0; index < map.length(); index++) {
+            if (map.charAt(index) == Elements.HEDGEHOG.ch) {
+                result.add(new HedgeHog(xy.getXY(index)));
             }
         }
         return result;

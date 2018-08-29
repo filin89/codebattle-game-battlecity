@@ -34,6 +34,11 @@ public class GameSettingsImpl implements GameSettings {
     private Parameter<Integer> initialAIAmmoCount;
     private Parameter<String> gameModeName;
     private Parameter<String> map;
+    private Parameter<Integer> maxHedgeHogsOnMap;
+    private Parameter<Integer> ticksToUpdateHedgehogs;
+    private Parameter<Integer> maxHedgehogLifetime;
+    private Parameter<Integer> minHedgehogLifetime;
+
 
 
     public GameSettingsImpl(Settings settings) {
@@ -44,6 +49,12 @@ public class GameSettingsImpl implements GameSettings {
                         BattlecityGameModes.PLAYERS_VERSUS_AI.getName(),
                         BattlecityGameModes.PLAYERS_ONLY.getName()))
                 .type(String.class).def(BattlecityGameModes.CLASSIC.getName());
+
+        ticksToUpdateHedgehogs = settings.addEditBox("Ticks to update Hedgehogs").type(Integer.class).def(20);
+        maxHedgeHogsOnMap = settings.addEditBox("Maximum Hedgehogs on the map ").type(Integer.class).def(20);
+        maxHedgehogLifetime = settings.addEditBox("Maximum Hedgehogs lifetime").type(Integer.class).def(30);
+        minHedgehogLifetime = settings.addEditBox("Minimum Hedgehogs lifetime").type(Integer.class).def(15);
+
 
         map = settings.addEditBox("Map").type(String.class).def("default");
     }
@@ -62,9 +73,28 @@ public class GameSettingsImpl implements GameSettings {
     public Parameter<String> getGameMode() {
         return gameModeName;
     }
-
     @Override
     public Parameter<String> getMap() {
         return map;
+    }
+
+    @Override
+    public Parameter<Integer> getMaxHedgeHogsOnMap() {
+        return maxHedgeHogsOnMap;
+    }
+
+    @Override
+    public Parameter<Integer> getTicksToUpdateHedgehogs() {
+        return ticksToUpdateHedgehogs;
+    }
+
+    @Override
+    public Parameter<Integer> getMaxHedgehogLifetime() {
+        return maxHedgehogLifetime;
+    }
+
+    @Override
+    public Parameter<Integer> getMinHedgehogLifetime() {
+        return minHedgehogLifetime;
     }
 }

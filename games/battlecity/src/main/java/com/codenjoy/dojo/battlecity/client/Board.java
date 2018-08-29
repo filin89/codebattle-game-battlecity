@@ -57,7 +57,8 @@ public class Board extends AbstractBoard<Elements> {
                 isAt(x, y, Elements.CONSTRUCTION_DESTROYED_UP_LEFT) ||
                 isAt(x, y, Elements.CONSTRUCTION_DESTROYED_RIGHT_UP) ||
                 isAt(x, y, Elements.CONSTRUCTION_DESTROYED_DOWN_LEFT) ||
-                isAt(x, y, Elements.CONSTRUCTION_DESTROYED_DOWN_RIGHT);
+                isAt(x, y, Elements.CONSTRUCTION_DESTROYED_DOWN_RIGHT) ||
+                isAt(x, y, Elements.HEDGEHOG);
     }
 
     public Point getMe() {
