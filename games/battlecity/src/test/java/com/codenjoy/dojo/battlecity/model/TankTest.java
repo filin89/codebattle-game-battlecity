@@ -47,11 +47,11 @@ public class TankTest {
         givenGameWithTankAt(1, 1);
         Tank tank = game.getTanks().get(0);
         tank.getAmmunition().setAmmoCount(0);
+        assertFalse(tank.getAmmunition().enoughAmmo());
 
         tank.act();
         game.tick();
 
-        assertFalse(tank.getAmmunition().enoughAmmo());
         assertEquals(Collections.emptyList(),tank.getBullets());
 
 
