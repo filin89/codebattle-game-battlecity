@@ -4,7 +4,7 @@ public class Ammunition {
 
     private static final int AMMO_BONUS = 5; //While the game did not enter bonus ammo
 
-    private int ammoCount/* = 3*/;
+    private int ammoCount;
 
     public Ammunition(int ammoCount) {
         this.ammoCount = ammoCount;
@@ -30,7 +30,5 @@ public class Ammunition {
        return ammoCount > 0; 
     }
 
-//    public Tank getOwner() {
-//        return owner;
-//    }
+
 }
