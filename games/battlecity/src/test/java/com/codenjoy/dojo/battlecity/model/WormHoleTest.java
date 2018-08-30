@@ -4,7 +4,7 @@ package com.codenjoy.dojo.battlecity.model;
  * #%L
  * Codenjoy - it's a dojo-like platform from developers to developers.
  * %%
- * Copyright (C) 2016 Codenjoy
+ * Copyright (C) 2016 - 2018 Codenjoy
  * %%
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as
@@ -22,35 +22,13 @@ package com.codenjoy.dojo.battlecity.model;
  * #L%
  */
 
+import org.junit.Test;
 
-import com.codenjoy.dojo.services.printer.BoardReader;
+import static org.junit.Assert.*;
 
-import java.util.List;
+public class WormHoleTest {
 
-public interface Field {
-    int size();
-
-    List<Border> getBorders();
-
-    List<Tank> getTanks();
-
-    List<Construction> getConstructions();
-
-    boolean isAmmoBonus(int x, int y);
-
-    boolean isBarrier(int x, int y);
-
-    boolean isWormHole(int x, int y);
-
-    boolean outOfField(int x, int y);
-
-    void affect(Bullet bullet);
-
-    List<Bullet> getBullets();
-
-    List<WormHole> getWormHoles();
-
-    BoardReader reader();
-
-    WormHole getWormHole(int newX, int newY);
+    @Test
+    public void calculateTankExit() {
+    }
 }

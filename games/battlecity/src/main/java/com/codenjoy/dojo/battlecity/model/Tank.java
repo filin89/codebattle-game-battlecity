@@ -28,6 +28,7 @@ import com.codenjoy.dojo.services.settings.Parameter;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class Tank extends MovingObject implements Joystick, Tickable, State<Elements, Player> {
 
@@ -81,14 +82,35 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
     public void moving(int newX, int newY) {
         if (field.isBarrier(newX, newY)) {
             // do nothing
+        } else if (field.isWormHole(newX, newY)) {
+            WormHole wormHole = field.getWormHole(newX, newY);
+            Optional<Point> wormHoleExit = wormHole.getExit(getMovingDirection(x, y, newX, newY));
+
+            wormHoleExit.ifPresent(p -> {
+                if (!field.outOfField(p.getX(), p.getY()) && !field.isBarrier(p.getX(), p.getY())) {
+                    setTankPosition(p.getX(), p.getY());
+                }
+            });
         } else {
-            x = newX;
-            y = newY;
+            setTankPosition(newX, newY);
         }
-        if (field.isAmmoBonus(newX, newY)){
+
+        if (field.isAmmoBonus(newX, newY)) {
             ammunition.replenishAmmo(5); // TODO: pass Ammo Bonus value
         }
         moving = false;
+    }
+
+    private void setTankPosition(int newX, int newY) {
+        x = newX;
+        y = newY;
+    }
+
+    private Direction getMovingDirection(int x, int y, int newX, int newY) {
+        if (newX - x > 0) return Direction.RIGHT;
+        else if (newX - x < 0) return Direction.LEFT;
+        else if (newY - y  < 0) return Direction.DOWN;
+        return Direction.UP;
     }
 
     @Override
@@ -122,8 +144,7 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
             xx = dice.next(field.size());
             yy = dice.next(field.size());
         }
-        x = xx;
-        y = yy;
+        setTankPosition(xx, yy);
         alive = true;
     }
 
