@@ -22,40 +22,6 @@ package com.codenjoy.dojo.battlecity.model;
  * #L%
  */
 
-import com.codenjoy.dojo.services.settings.Parameter;
-
-public class Ammunition {
-
-    private int ammoCount;
-    private Parameter<Integer> initialAmmoCount;
-
-    public Ammunition(Parameter<Integer> initialAmmoCount) {
-        this.ammoCount = initialAmmoCount.getValue();
-        this.initialAmmoCount = initialAmmoCount;
-    }
-
-    public void replenishAmmo(int bonusAmmo){
-        ammoCount += bonusAmmo;
-    }
-
-    public void ammoAfterShotDecrement(){
-        ammoCount--;
-    }
-
-    public int getAmmoCount() {
-        return ammoCount;
-    }
-
-    public void setAmmoCount(int ammoCount) {
-        this.ammoCount = ammoCount;
-    }
-
-    public boolean enoughAmmo(){
-       return ammoCount > 0; 
-    }
-
-
-    public void refreshAmmo() {
-        ammoCount = initialAmmoCount.getValue();
-    }
+public interface TankFactory {
+    Tank createTank(TankParams tankParams);
 }

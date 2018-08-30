@@ -24,6 +24,7 @@ package com.codenjoy.dojo.battlecity.model;
 
 
 import com.codenjoy.dojo.services.*;
+import com.codenjoy.dojo.services.settings.Parameter;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -32,26 +33,20 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
 
     private Dice dice;
     private List<Bullet> bullets;
-    private int goldenAmmoCount;
     private Ammunition ammunition;
     protected Field field;
     private boolean alive;
     private Gun gun;
 
-
-//The constructor is used in old tests, where there is no restriction on ammo,
-// with 100 ammoCount the tests work
-
-
-    public Tank(int x, int y, Direction direction, Dice dice, int ticksPerBullets, int ammoCount) {
+    public Tank(int x, int y, Direction direction, Dice dice, int ticksPerBullets, Parameter<Integer> initialAmmo) {
         super(x, y, direction);
         gun = new Gun(ticksPerBullets);
-        bullets = new LinkedList<Bullet>();
+        bullets = new LinkedList<>();
         speed = 1;
         moving = false;
         alive = true;
         this.dice = dice;
-        this.ammunition = new Ammunition(ammoCount);
+        this.ammunition = new Ammunition(initialAmmo);
     }
 
     void turn(Direction direction) {
@@ -84,7 +79,6 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
 
     @Override
     public void moving(int newX, int newY) {
-
         if (field.isBarrier(newX, newY)) {
             // do nothing
         } else {
@@ -92,26 +86,21 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
             y = newY;
         }
         if (field.isAmmoBonus(newX, newY)){
-            ammunition.replenishAmmo();
+            ammunition.replenishAmmo(5); // TODO: pass Ammo Bonus value
         }
         moving = false;
     }
 
     @Override
     public void act(int... p) {
+        if (ammunition.enoughAmmo() && gun.tryToFire()) {
+            Bullet bullet = new Bullet(field, direction, copy(), this,
+                    bullet1 -> Tank.this.bullets.remove(bullet1));
 
-        if (ammunition.enoughAmmo()) {
-            if (gun.tryToFire()) {
-                Bullet bullet = new Bullet(field, direction, copy(), this, new OnDestroy() {
-                    @Override
-                    public void destroy(Object bullet) {
-                        Tank.this.bullets.remove(bullet);
-                    }
-                });
-                ammunition.ammoAfterShotDecrement();
-                if (!bullets.contains(bullet)) {
-                    bullets.add(bullet);
-                }
+            ammunition.ammoAfterShotDecrement();
+
+            if (!bullets.contains(bullet)) {
+                bullets.add(bullet);
             }
         }
     }
@@ -122,7 +111,7 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
     }
 
     public Iterable<Bullet> getBullets() {
-        return new LinkedList<Bullet>(bullets);
+        return new LinkedList<>(bullets);
     }
 
     public void setField(Field field) {
@@ -166,33 +155,31 @@ public class Tank extends MovingObject implements Joystick, Tickable, State<Elem
         if (isAlive()) {
             if (player.getTank() == this) {
                 switch (direction) {
-                    case LEFT:
-                        return Elements.TANK_LEFT;
-                    case RIGHT:
-                        return Elements.TANK_RIGHT;
-                    case UP:
-                        return Elements.TANK_UP;
-                    case DOWN:
-                        return Elements.TANK_DOWN;
-                    default:
-                        throw new RuntimeException("Неправильное состояние танка!");
+                    case LEFT:  return Elements.TANK_LEFT;
+                    case RIGHT: return Elements.TANK_RIGHT;
+                    case UP:    return Elements.TANK_UP;
+                    case DOWN:  return Elements.TANK_DOWN;
+                    default:    throw new RuntimeException("Неправильное состояние танка!");
                 }
             } else {
                 switch (direction) {
-                    case LEFT:
-                        return Elements.OTHER_TANK_LEFT;
-                    case RIGHT:
-                        return Elements.OTHER_TANK_RIGHT;
-                    case UP:
-                        return Elements.OTHER_TANK_UP;
-                    case DOWN:
-                        return Elements.OTHER_TANK_DOWN;
-                    default:
-                        throw new RuntimeException("Неправильное состояние танка!");
+                    case LEFT:  return Elements.OTHER_TANK_LEFT;
+                    case RIGHT: return Elements.OTHER_TANK_RIGHT;
+                    case UP:    return Elements.OTHER_TANK_UP;
+                    case DOWN:  return Elements.OTHER_TANK_DOWN;
+                    default:    throw new RuntimeException("Неправильное состояние танка!");
                 }
             }
         } else {
             return Elements.BANG;
         }
+    }
+
+    public void refreshState() {
+        ammunition.refreshAmmo();
+    }
+
+    public enum Type {
+        Player, AI
     }
 }

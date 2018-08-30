@@ -1,4 +1,4 @@
-package com.codenjoy.dojo.battlecity.model;
+package com.codenjoy.dojo.battlecity.model.modes;
 
 /*-
  * #%L
@@ -22,40 +22,31 @@ package com.codenjoy.dojo.battlecity.model;
  * #L%
  */
 
-import com.codenjoy.dojo.services.settings.Parameter;
+import java.util.Arrays;
 
-public class Ammunition {
+public enum BattlecityGameModes {
+    CLASSIC("Classic"),
+    PLAYERS_VERSUS_AI("PlayersVersusAI"),
+    PLAYERS_ONLY("PlayersOnly");
 
-    private int ammoCount;
-    private Parameter<Integer> initialAmmoCount;
+    private String name;
 
-    public Ammunition(Parameter<Integer> initialAmmoCount) {
-        this.ammoCount = initialAmmoCount.getValue();
-        this.initialAmmoCount = initialAmmoCount;
+    BattlecityGameModes(String name) {
+        this.name = name;
     }
 
-    public void replenishAmmo(int bonusAmmo){
-        ammoCount += bonusAmmo;
+    public static BattlecityGameModes fromName(String gameModeName) {
+        for (BattlecityGameModes mode : values()) {
+            if (mode.name.equalsIgnoreCase(gameModeName)) {
+                return mode;
+            }
+        }
+
+        throw new IllegalArgumentException("Unregistered gameMode with name " + gameModeName + "\n" +
+                "Known modes: " + Arrays.toString(values()));
     }
 
-    public void ammoAfterShotDecrement(){
-        ammoCount--;
-    }
-
-    public int getAmmoCount() {
-        return ammoCount;
-    }
-
-    public void setAmmoCount(int ammoCount) {
-        this.ammoCount = ammoCount;
-    }
-
-    public boolean enoughAmmo(){
-       return ammoCount > 0; 
-    }
-
-
-    public void refreshAmmo() {
-        ammoCount = initialAmmoCount.getValue();
+    public String getName() {
+        return name;
     }
 }

@@ -23,8 +23,7 @@ package com.codenjoy.dojo.battlecity.model;
  */
 
 
-import com.codenjoy.dojo.battlecity.services.Events;
-import com.codenjoy.dojo.services.Dice;
+import com.codenjoy.dojo.battlecity.model.events.Event;
 import com.codenjoy.dojo.services.Direction;
 import com.codenjoy.dojo.services.EventListener;
 
@@ -33,39 +32,18 @@ public class Player {
 
     private Tank tank;
     private EventListener listener;
-    private int maxScore;
-    private int score;
-    private static final int AMMO_COUNT = 6;
 
-    public Player(EventListener listener, Dice dice) {
+    public Player(EventListener listener, TankFactory playerTankFactory) {
         this.listener = listener;
-        clearScore();
-        tank = new Tank(0, 0, Direction.UP, dice, TICKS_PER_BULLETS,AMMO_COUNT);
+        tank = playerTankFactory.createTank(
+                TankParams.newTankParams(0, 0, Direction.UP, TICKS_PER_BULLETS));
     }
 
     public Tank getTank() {
         return tank;
     }
 
-    private void increaseScore() {
-        score = score + 1;
-        maxScore = Math.max(maxScore, score);
-    }
-
-    public int getMaxScore() {
-        return maxScore;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void event(Events event) {
-        switch (event) {
-            case KILL_OTHER_TANK: increaseScore(); break;
-            case KILL_YOUR_TANK: gameOver(); break;
-        }
-
+    public void event(Event event) {
         if (listener != null) {
             listener.event(event);
         }
@@ -73,16 +51,11 @@ public class Player {
 
     private void gameOver() {
         tank.kill(null);
-        score = 0;
-    }
-
-    public void clearScore() {   // TODO test me
-        score = 0;
-        maxScore = 0;
     }
 
     public void newHero(Battlecity tanks) {
         tank.removeBullets();
         tank.setField(tanks);
+        tank.refreshState();
     }
 }

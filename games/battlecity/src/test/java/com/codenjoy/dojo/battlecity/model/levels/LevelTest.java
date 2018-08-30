@@ -24,6 +24,8 @@ package com.codenjoy.dojo.battlecity.model.levels;
 
 
 import com.codenjoy.dojo.battlecity.model.Player;
+import com.codenjoy.dojo.battlecity.model.PlayerTankFactory;
+import com.codenjoy.dojo.services.RandomDice;
 import com.codenjoy.dojo.services.printer.Printer;
 import com.codenjoy.dojo.services.printer.PrinterFactory;
 import com.codenjoy.dojo.services.printer.PrinterFactoryImpl;
@@ -43,7 +45,7 @@ public class LevelTest {
 
     @Test
     public void test() {
-        Level level = new Level();
+        Level level = new Level("", new PlayerTankFactory(new RandomDice(), null));
 
         assertEquals(34, level.size());
 

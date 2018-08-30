@@ -22,40 +22,25 @@ package com.codenjoy.dojo.battlecity.model;
  * #L%
  */
 
-import com.codenjoy.dojo.services.settings.Parameter;
+import com.codenjoy.dojo.services.Dice;
 
-public class Ammunition {
+public class PlayerTankFactory implements TankFactory {
 
-    private int ammoCount;
-    private Parameter<Integer> initialAmmoCount;
+    private Dice dice;
+    private GameSettings gameSettings;
 
-    public Ammunition(Parameter<Integer> initialAmmoCount) {
-        this.ammoCount = initialAmmoCount.getValue();
-        this.initialAmmoCount = initialAmmoCount;
+    public PlayerTankFactory(Dice dice, GameSettings settings) {
+        this.dice = dice;
+        this.gameSettings = settings;
     }
 
-    public void replenishAmmo(int bonusAmmo){
-        ammoCount += bonusAmmo;
-    }
-
-    public void ammoAfterShotDecrement(){
-        ammoCount--;
-    }
-
-    public int getAmmoCount() {
-        return ammoCount;
-    }
-
-    public void setAmmoCount(int ammoCount) {
-        this.ammoCount = ammoCount;
-    }
-
-    public boolean enoughAmmo(){
-       return ammoCount > 0; 
-    }
-
-
-    public void refreshAmmo() {
-        ammoCount = initialAmmoCount.getValue();
+    @Override
+    public Tank createTank(TankParams tankParams) {
+        return new Tank(tankParams.getX() ,
+                tankParams.getY(),
+                tankParams.getDirection(),
+                dice,
+                tankParams.getTicksPerBullets(),
+                gameSettings.getInitialPlayerAmmoCount());
     }
 }
