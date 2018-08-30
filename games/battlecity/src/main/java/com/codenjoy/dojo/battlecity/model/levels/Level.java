@@ -100,6 +100,11 @@ public class Level implements Field {
     }
 
     @Override
+    public boolean isAmmoBonus(int x, int y) {
+        return false; // do nothing
+    }
+
+    @Override
     public boolean isBarrier(int x, int y) {
         return false; // do nothing
     }

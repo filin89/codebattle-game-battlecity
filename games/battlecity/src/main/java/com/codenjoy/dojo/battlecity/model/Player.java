@@ -35,11 +35,12 @@ public class Player {
     private EventListener listener;
     private int maxScore;
     private int score;
+    private static final int AMMO_COUNT = 6;
 
     public Player(EventListener listener, Dice dice) {
         this.listener = listener;
         clearScore();
-        tank = new Tank(0, 0, Direction.UP, dice, TICKS_PER_BULLETS);
+        tank = new Tank(0, 0, Direction.UP, dice, TICKS_PER_BULLETS,AMMO_COUNT);
     }
 
     public Tank getTank() {

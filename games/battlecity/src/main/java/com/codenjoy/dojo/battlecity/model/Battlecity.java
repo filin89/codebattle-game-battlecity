@@ -212,6 +212,7 @@ public class Battlecity implements Tickable, ITanks, Field {
     private Player getPlayer(Tank tank) {
         for (Player player : players) {
             if (player.getTank().equals(tank)) {
+
                 return player;
             }
         }
@@ -237,6 +238,10 @@ public class Battlecity implements Tickable, ITanks, Field {
             }
         }
         return outOfField(x, y);
+    }
+    @Override
+    public boolean isAmmoBonus(int x, int y) {
+        return false; //реализовать проверку на бонусные патроны
     }
 
     @Override
