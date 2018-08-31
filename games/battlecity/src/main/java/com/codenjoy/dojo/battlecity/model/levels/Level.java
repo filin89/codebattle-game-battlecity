@@ -29,10 +29,12 @@ import com.codenjoy.dojo.services.printer.BoardReader;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class Level implements Field {
 
     private final LengthToXY xy;
+    private Random random = new Random();
 
     private String map =
             "☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ " +
@@ -54,15 +56,15 @@ public class Level implements Field {
             "☼ ☼ ☼       ╬ ╬ ╬ ╬ ╬                       ͱ  ╬ ╬ ╬ ╬ ╬  ͱ   ☼ ☼ ☼ " +
             "☼                                           ͱ ͱ ͱ ͱ ͱ ͱ           ☼ " +
             "☼                         ╬ ╬ ╬     ╬ ╬ ╬                         ☼ " +
-            "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬  ͱ  ╬ ╬ ╬  ͱ  ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
+            "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬ ͱ   ╬ ╬ ╬   ͱ ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬ ╬ ╬ ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬ ╬ ╬ ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
-            "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬  ͱ  ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
+            "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬ ͱ   ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ╬ ╬ ╬     ☼ " +
-            "☼     ╬ ╬ ╬                                             ╬ ╬ ╬     ☼ " +
+            "☼     ╬ ╬ ╬ ͱ         ͱ                                 ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬                                             ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬               ╬ ╬ ╬ ╬ ╬ ╬ ╬ ╬               ╬ ╬ ╬     ☼ " +
             "☼     ╬ ╬ ╬               ╬ ╬ ╬ ╬ ╬ ╬ ╬ ╬               ╬ ╬ ╬     ☼ " +
@@ -131,6 +133,25 @@ public class Level implements Field {
         for (int index = 0; index < map.length(); index++) {
             if (map.charAt(index) == Elements.HEDGEHOG.ch) {
                 result.add(new HedgeHog(xy.getXY(index)));
+            }
+        }
+        return result;
+    }
+
+
+    public List<HedgeHog> getHedgeHogsAuto() {
+        final int numberOfHedgehogs = 5;
+        final int coverage = 650;
+        int index;
+        int counter = 0;
+        List<HedgeHog> result = new LinkedList<>();
+
+
+        while(counter < numberOfHedgehogs) {
+            index = 2 + random.nextInt(coverage);
+            if(map.charAt(index) == ' '){ // TODO Здесь нужно проверять по карте, обновляющейся с каждым тиком, а не только заданной изначально. Без проверки вообще еж может пытаться встать на занятую ячейку и не появиться, соответственно кол-во появившихся будет заметно меньше заданных.
+                result.add(new HedgeHog(xy.getXY(index)));
+                counter++;
             }
         }
         return result;

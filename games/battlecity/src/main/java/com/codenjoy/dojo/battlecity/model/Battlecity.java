@@ -25,6 +25,7 @@ package com.codenjoy.dojo.battlecity.model;
 
 
 import com.codenjoy.dojo.battlecity.model.levels.DefaultBorders;
+import com.codenjoy.dojo.battlecity.model.levels.Level;
 import com.codenjoy.dojo.battlecity.services.Events;
 import com.codenjoy.dojo.services.*;
 import com.codenjoy.dojo.services.printer.BoardReader;
@@ -307,8 +308,8 @@ public class Battlecity implements Tickable, ITanks, Field {
                 result.addAll(Battlecity.this.getBorders());
                 result.addAll(Battlecity.this.getTanks());
                 result.addAll(Battlecity.this.getConstructions());
+                result.addAll(Battlecity.this.getHedgeHogsAuto());
                 result.addAll(Battlecity.this.getBullets());
-                result.addAll(Battlecity.this.getHedgeHogs());
                 return result;
             }
         };
@@ -332,6 +333,11 @@ public class Battlecity implements Tickable, ITanks, Field {
 
     @Override
     public List<HedgeHog> getHedgeHogs() {
+        return hedgeHogs;
+    }
+
+    public List<HedgeHog> getHedgeHogsAuto() {
+        hedgeHogs = new Level().getHedgeHogsAuto();
         return hedgeHogs;
     }
 
