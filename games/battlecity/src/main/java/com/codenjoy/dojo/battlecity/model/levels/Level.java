@@ -80,6 +80,11 @@ public class Level implements Field {
     }
 
     @Override
+    public boolean isWormHole(int x, int y) {
+        return false;
+    }
+
+    @Override
     public boolean outOfField(int x, int y) {
         return false;  // do nothing
     }
@@ -91,7 +96,7 @@ public class Level implements Field {
 
     @Override
     public List<Bullet> getBullets() {
-        return new LinkedList<Bullet>(); // do nothing
+        return new LinkedList<>(); // do nothing
     }
 
     @Override
@@ -104,8 +109,9 @@ public class Level implements Field {
 
             @Override
             public Iterable<? extends Point> elements() {
-                List<Point> result = new LinkedList<Point>();
+                List<Point> result = new LinkedList<>();
                 result.addAll(Level.this.getBorders());
+                result.addAll(Level.this.getWormHoles());
                 result.addAll(Level.this.getBullets());
                 result.addAll(Level.this.getConstructions());
                 result.addAll(Level.this.getTanks());
@@ -136,5 +142,22 @@ public class Level implements Field {
             }
         }
         return result;
+    }
+
+    @Override
+    public List<WormHole> getWormHoles() {
+        List<WormHole> result = new LinkedList<>();
+
+        for (int index = 0; index < map.length(); index++) {
+            if (map.charAt(index) == Elements.WORM_HOLE.ch) {
+                result.add(new WormHole(xy.getXY(index), result));
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public WormHole getWormHole(int newX, int newY) {
+        return null;
     }
 }

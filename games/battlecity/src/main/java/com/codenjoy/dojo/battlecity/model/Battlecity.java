@@ -50,6 +50,7 @@ public class Battlecity implements Tickable, ITanks, Field {
     private int size;
     private List<Construction> constructions;
     private List<Border> borders;
+    private List<WormHole> wormHoles;
     private List<Player> players = new LinkedList<>();
     private TankFactory aiTankFactory;
     private GameSettings settings;
@@ -83,6 +84,7 @@ public class Battlecity implements Tickable, ITanks, Field {
         this.aiTanks = new LinkedList<>();
         this.constructions = new LinkedList<>(level.getConstructions());
         this.borders = new LinkedList<>(level.getBorders());
+        this.wormHoles = new LinkedList<>(level.getWormHoles());
     }
 
     @Override
@@ -293,6 +295,20 @@ public class Battlecity implements Tickable, ITanks, Field {
     }
 
     @Override
+    public boolean isWormHole(int x, int y) {
+        return wormHoles.stream()
+                .anyMatch(wormHole -> wormHole.itsMe(x, y));
+    }
+
+    @Override
+    public WormHole getWormHole(int x, int y) {
+        return wormHoles.stream()
+                .filter(wormHole -> wormHole.itsMe(x, y))
+                .findAny()
+                .orElse(null);
+    }
+
+    @Override
     public boolean outOfField(int x, int y) { // TODO заменить все есть в point
         return x < 0 || y < 0 || y > size - 1 || x > size - 1;
     }
@@ -353,6 +369,7 @@ public class Battlecity implements Tickable, ITanks, Field {
                 result.addAll(Battlecity.this.getBorders());
                 result.addAll(Battlecity.this.getTanks());
                 result.addAll(Battlecity.this.getConstructions());
+                result.addAll(Battlecity.this.getWormHoles());
                 result.addAll(Battlecity.this.getBullets());
                 return result;
             }
@@ -373,6 +390,11 @@ public class Battlecity implements Tickable, ITanks, Field {
     @Override
     public List<Border> getBorders() {
         return borders;
+    }
+
+    @Override
+    public List<WormHole> getWormHoles() {
+        return wormHoles;
     }
 
     public void setDice(Dice dice) {
