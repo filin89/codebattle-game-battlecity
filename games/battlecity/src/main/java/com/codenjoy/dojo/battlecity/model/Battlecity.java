@@ -46,6 +46,8 @@ public class Battlecity implements Tickable, ITanks, Field {
 
     private List<Player> players = new LinkedList<Player>();
 
+    private Level level = new Level();
+
     public Battlecity(int size, List<Construction> constructions, List<HedgeHog> hedgeHogs, Tank... aiTanks) {
         this(size, constructions, new DefaultBorders(size).get(), hedgeHogs, aiTanks);
     }
@@ -308,7 +310,7 @@ public class Battlecity implements Tickable, ITanks, Field {
                 result.addAll(Battlecity.this.getBorders());
                 result.addAll(Battlecity.this.getTanks());
                 result.addAll(Battlecity.this.getConstructions());
-                result.addAll(Battlecity.this.getHedgeHogsAuto());
+                result.addAll(Battlecity.this.getHedgeHogsAuto(result));
                 result.addAll(Battlecity.this.getBullets());
                 return result;
             }
@@ -336,8 +338,8 @@ public class Battlecity implements Tickable, ITanks, Field {
         return hedgeHogs;
     }
 
-    public List<HedgeHog> getHedgeHogsAuto() {
-        hedgeHogs = new Level().getHedgeHogsAuto();
+    public List<HedgeHog> getHedgeHogsAuto(List<Point> addedEl) {
+        hedgeHogs = level.getHedgeHogsAuto(addedEl);
         return hedgeHogs;
     }
 

@@ -27,14 +27,15 @@ import com.codenjoy.dojo.battlecity.model.*;
 import com.codenjoy.dojo.services.*;
 import com.codenjoy.dojo.services.printer.BoardReader;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Level implements Field {
 
     private final LengthToXY xy;
     private Random random = new Random();
+    List<HedgeHog> result = new LinkedList<>();
+
+    int tick;
 
     private String map =
             "☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ ☼ " +
@@ -139,22 +140,39 @@ public class Level implements Field {
     }
 
 
-    public List<HedgeHog> getHedgeHogsAuto() {
-        final int numberOfHedgehogs = 5;
+    public List<HedgeHog> getHedgeHogsAuto(List<Point> addedElems) {
+        final int numberOfHedgehogs = 40;
         final int coverage = 650;
         int index;
         int counter = 0;
-        List<HedgeHog> result = new LinkedList<>();
+        final int ticksToUpdate = 44;
+        boolean pointExists;
 
-
-        while(counter < numberOfHedgehogs) {
-            index = 2 + random.nextInt(coverage);
-            if(map.charAt(index) == ' '){ // TODO Здесь нужно проверять по карте, обновляющейся с каждым тиком, а не только заданной изначально. Без проверки вообще еж может пытаться встать на занятую ячейку и не появиться, соответственно кол-во появившихся будет заметно меньше заданных.
-                result.add(new HedgeHog(xy.getXY(index)));
-                counter++;
+        if(tick == ticksToUpdate){
+            result = new LinkedList<>();
+            while (counter < numberOfHedgehogs) {
+                index = 2 + random.nextInt(coverage);
+                pointExists = checkExistingPoint(xy.getXY(index), addedElems);
+                if (!pointExists/*map.charAt(index) == ' '*/) {
+                    result.add(new HedgeHog(xy.getXY(index)));
+                    counter++;
+                }
             }
+            tick=0;
+        }else{
+            tick++;
         }
+
         return result;
+    }
+
+
+    public boolean checkExistingPoint(Point point, List<Point> addedElems){
+        for(int i=0; i<addedElems.size(); i++){
+            boolean exist = addedElems.get(i).itsMe(point);
+            if(exist) return exist;
+        }
+        return false;
     }
 
     @Override
